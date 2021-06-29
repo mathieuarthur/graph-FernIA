@@ -2,19 +2,19 @@
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 
-Une petite description du projet
+<!-- Une petite description du projet -->
 
-## Pour commencer
+<!-- ## Pour commencer
 
-Entrez ici les instructions pour bien débuter avec votre projet...
+Entrez ici les instructions pour bien débuter avec votre projet... -->
 
-### Pré-requis
+<!-- ### Pré-requis
 
 Ce qu'il est requis pour commencer avec votre projet...
 
 - Programme 1
 - Programme 2
-- etc...
+- etc... -->
 
 ### Installation
 
