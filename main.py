@@ -23,6 +23,7 @@ class User(ObjectType):
     username = String()
     isAdmin = Boolean()
     password = String()
+    isSuspended = Boolean()
 
 class Image(ObjectType):
     _id = ID()
@@ -80,10 +81,22 @@ class Mutation(ObjectType):
         query = img.insert_one({"image": image, "userId": userId})
         return query
     
-    register = Field(User, username = String(required = True), password = String(required = True), isAdmin = Boolean(default_value = False))
+    register = Field(User, username = String(required = True), password = String(required = True), isAdmin = Boolean(default_value = False), isSuspended = Boolean(default_value = False))
 
     def resolve_register(self, info, username, password, isAdmin):
         query = us.insert_one({"username": username, "password": password, "isAdmin": isAdmin})
+        return query
+
+    deleteUser = Field(User, username = String(required = True))
+
+    def resolve_deleteUser(self, info, username):
+        query = us.delete_one({"username": username})
+        return query
+
+    updateSuspend = Field(User, username = String(required = True), isSuspended = Boolean(required = True))
+
+    def resolve_updateSuspend(self, info, username, isSuspended):
+        query = us.find_one_and_update({"username": username}, {"$set": {"isSuspended": isSuspended}})
         return query
 
 app = FastAPI()
