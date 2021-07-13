@@ -8,6 +8,16 @@ from graphene.types.structures import List
 from pymongo import MongoClient
 from fastapi import FastAPI
 from starlette.graphql import GraphQLApp
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost",
+    "https://localhost",
+    "https://localhost:8080",
+    "https://localhost:80",
+    "http://localhost:8080",
+    "http://localhost:80"
+]
 
 CONNECTION_STRING = os.environ.get("DBSTRING")
 
@@ -120,7 +130,14 @@ class Mutation(ObjectType):
             voteCount -= 1
             img.find_one_and_update({"_id": imageId}, {"$set": {"vote": voteCount}})
             return "downvote"
-            
+
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_route("/api", GraphQLApp(schema=graphene.Schema(query=Query, mutation=Mutation)))
