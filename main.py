@@ -52,10 +52,14 @@ class Query(ObjectType):
         key = os.environ.get("key")
 
         query = us.find_one({"username": username})
+        suspended = query.get("isSuspended")
 
         if(password == query.get("password")):
-            encoded_jwt = jwt.encode({"username": username}, key, algorithm="HS256")
-            return encoded_jwt
+            if(not suspended):
+                encoded_jwt = jwt.encode({"username": username}, key, algorithm="HS256")
+                return encoded_jwt
+            else:
+                return "Account suspended"
         else:
             return "Password not valid"
     
@@ -107,18 +111,16 @@ class Mutation(ObjectType):
         voteCount = img.find_one({"_id": imageId})
         voteCount = voteCount.get("vote")
 
-        if vote == "up":
+        if (vote == "up"):
             voteCount += 1
             img.find_one_and_update({"_id": imageId}, {"$set": {"vote": voteCount}})
             return "upvote"
 
-        elif vote == "down":
+        elif (vote == "down"):
             voteCount -= 1
             img.find_one_and_update({"_id": imageId}, {"$set": {"vote": voteCount}})
             return "downvote"
             
-
-
 app = FastAPI()
 
 app.add_route("/api", GraphQLApp(schema=graphene.Schema(query=Query, mutation=Mutation)))
