@@ -1,5 +1,4 @@
 import os
-from typing_extensions import Required
 import graphene
 import jwt
 from graphene.types.field import Field
