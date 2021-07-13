@@ -85,8 +85,8 @@ class Mutation(ObjectType):
     
     register = Field(User, username = String(required = True), password = String(required = True), isAdmin = Boolean(default_value = False), isSuspended = Boolean(default_value = False))
 
-    def resolve_register(self, info, username, password, isAdmin):
-        query = us.insert_one({"username": username, "password": password, "isAdmin": isAdmin})
+    def resolve_register(self, info, username, password, isAdmin, isSuspended):
+        query = us.insert_one({"username": username, "password": password, "isAdmin": isAdmin, "isSuspended": isSuspended})
         return query
 
     deleteUser = Field(User, username = String(required = True))
