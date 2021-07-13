@@ -1,9 +1,10 @@
 import os
+from typing_extensions import Required
 import graphene
 import jwt
 from graphene.types.field import Field
 from graphene.types.objecttype import ObjectType
-from graphene.types.scalars import Boolean, ID, String
+from graphene.types.scalars import Boolean, ID, Int, String
 from graphene.types.structures import List
 from pymongo import MongoClient
 from fastapi import FastAPI
@@ -30,6 +31,7 @@ class Image(ObjectType):
     _id = ID()
     userId = String()
     image = String()
+    vote = Int()
 
 class Query(ObjectType):
     
@@ -99,6 +101,24 @@ class Mutation(ObjectType):
     def resolve_updateSuspend(self, info, username, isSuspended):
         query = us.find_one_and_update({"username": username}, {"$set": {"isSuspended": isSuspended}})
         return query
+
+    vote = Field(Image, vote = String(required = True), imageId = ID(required = True))
+
+    def resolve_vote(self, info, vote, imageId):
+        voteCount = img.find_one({"_id": imageId})
+        voteCount = voteCount.get("vote")
+
+        if vote == "up":
+            voteCount += 1
+            img.find_one_and_update({"_id": imageId}, {"$set": {"vote": voteCount}})
+            return "upvote"
+
+        elif vote == "down":
+            voteCount -= 1
+            img.find_one_and_update({"_id": imageId}, {"$set": {"vote": voteCount}})
+            return "downvote"
+            
+
 
 app = FastAPI()
 
