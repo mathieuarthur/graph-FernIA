@@ -10,16 +10,7 @@ from fastapi import FastAPI
 from starlette.graphql import GraphQLApp
 from fastapi.middleware.cors import CORSMiddleware
 
-origins = [
-    "http://localhost",
-    "https://localhost",
-    "https://localhost:8080",
-    "https://localhost:80",
-    "http://localhost:8080",
-    "http://localhost:80"
-]
-
-CONNECTION_STRING = os.environ.get("DBSTRING")
+CONNECTION_STRING = "mongodb+srv://LeMecWeird:aled123@cluster0.nyyus.mongodb.net/"
 
 client = MongoClient(CONNECTION_STRING)
 
@@ -135,8 +126,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins= "*",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
