@@ -31,6 +31,7 @@ class Image(ObjectType):
     _id = ID()
     userId = String()
     image = String()
+    title = String()
     vote = Int()
 
 class Query(ObjectType):
@@ -80,12 +81,12 @@ class Query(ObjectType):
     
 class Mutation(ObjectType):
     
-    addImage = Field(Image, username = String(required = True), image = String(required = True))
+    addImage = Field(Image, username = String(required = True), image = String(required = True), title = String(required = True))
 
-    def resolve_addImage(self, info, username, image):
+    def resolve_addImage(self, info, username, image, title):
         userId = us.find_one({"username": username})
         userId = userId.get("_id")
-        query = img.insert_one({"image": image, "userId": userId})
+        query = img.insert_one({"image": image, "title": title, "userId": userId})
         return query
     
     register = Field(User, username = String(required = True), password = String(required = True), isAdmin = Boolean(default_value = False), isSuspended = Boolean(default_value = False))
